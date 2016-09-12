@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 
 #import <Security/Security.h>
+#import <Foundation/Foundation.h>
 
 /// @constant The default MKConnection ping interval.
 #define MKConnectionPingInterval 5.0f
@@ -437,4 +438,6 @@ typedef enum {
 /// Returns whether ot not the connected client should use the Opus codec.
 - (BOOL) shouldUseOpus;
 
+/// Returns UDP Statistics
+- (NSArray *)udpStatistics;
 @end

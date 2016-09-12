@@ -27,6 +27,60 @@ CryptState::CryptState() {
 	uiGood = uiLate = uiLost = uiResync = 0;
 	uiRemoteGood = uiRemoteLate = uiRemoteLost = uiRemoteResync = 0;
 }
+    
+unsigned int CryptState::getUIGood() const{
+    return uiGood;
+}
+
+unsigned int CryptState::getUILate() const{
+    return uiLate;
+}
+    
+unsigned int CryptState::getUILost() const{
+    return uiLost;
+}
+unsigned int CryptState::getUIResync() const{
+    return uiResync;
+}
+
+unsigned int CryptState::getUIRemoteGood() const{
+    return uiRemoteGood;
+}
+unsigned int CryptState::getUIRemoteLate() const{
+    return uiRemoteLate;
+}
+unsigned int CryptState::getUIRemoteLost() const{
+    return uiRemoteLost;
+}
+unsigned int CryptState::getUIRemoteResync() const{
+    return uiRemoteResync;
+}
+ 
+void CryptState::setUIRemoteGood(unsigned int uiRG){
+    uiRemoteGood = uiRG;
+}
+void CryptState::setUIRemoteLate(unsigned int uiRLat){
+    uiRemoteLate = uiRLat;
+}
+void CryptState::setUIRemoteLost(unsigned int uiRLos){
+    uiRemoteLost = uiRLos;
+}
+void CryptState::setUIRemoteResync(unsigned int uiRS){
+    uiRemoteResync = uiRS;
+}
+
+void CryptState::setUIGood(unsigned int uiG){
+    uiGood = uiG;
+}
+void CryptState::setUILate(unsigned int uiLat){
+    uiLate = uiLat;
+}
+void CryptState::setUILost(unsigned int uiLos){
+    uiLost = uiLos;
+}
+void CryptState::setUIResync(unsigned int uiS){
+    uiResync = uiS;
+}
 
 bool CryptState::isValid() const {
 	return bInit;

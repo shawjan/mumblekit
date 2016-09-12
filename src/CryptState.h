@@ -43,6 +43,27 @@ class CryptState {
 
         bool decrypt(const unsigned char* source, unsigned char* dst, unsigned int crypted_length);
         void encrypt(const unsigned char* source, unsigned char* dst, unsigned int plain_length);
+    
+        //API for UDP statistic
+        unsigned int getUIGood() const;
+        unsigned int getUILate() const;
+        unsigned int getUILost() const;
+        unsigned int getUIResync() const;
+    
+        unsigned int getUIRemoteGood() const;
+        unsigned int getUIRemoteLate() const;
+        unsigned int getUIRemoteLost() const;
+        unsigned int getUIRemoteResync() const;
+    
+        void setUIRemoteGood(unsigned int uiRG);
+        void setUIRemoteLate(unsigned int uiRLat);
+        void setUIRemoteLost(unsigned int uiRLos);
+        void setUIRemoteResync(unsigned int uiRS);
+    
+        void setUIGood(unsigned int uiG);
+        void setUILate(unsigned int uiLat);
+        void setUILost(unsigned int uiLos);
+        void setUIResync(unsigned int uiS);
 };
 
 }  // end namespace MumbleClient

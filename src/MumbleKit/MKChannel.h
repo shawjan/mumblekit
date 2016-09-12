@@ -1,7 +1,6 @@
 // Copyright 2010-2012 The MumbleKit Developers. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
 @class MKUser;
 
 /// @class MKChannel MKChannel.h MumbleKit/MKChannel.h
@@ -18,6 +17,7 @@
 /// 
 /// Thus, if all inspection of the MKChannel's properties happen in response to
 /// MKServerModelDelegate callbacks, everything should be OK.
+
 @interface MKChannel : NSObject
 
 /// Returns the channel's channel ID.

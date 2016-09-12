@@ -31,7 +31,7 @@ struct MKCryptStatePrivate {
 	self = [super init];
 	if (self == nil)
 		return nil;
-
+    
 	_priv = (struct MKCryptStatePrivate *) malloc(sizeof(struct MKCryptStatePrivate));
 
 	return self;
@@ -89,6 +89,70 @@ struct MKCryptStatePrivate {
 		[plain release];
 		return nil;
 	}
+}
+
+- (unsigned int) uiGood{
+    return _priv->cs.getUIGood();
+}
+
+- (unsigned int) uiLate{
+    return _priv->cs.getUILate();
+}
+
+- (unsigned int) uiLost{
+    return _priv->cs.getUILost();
+}
+
+- (unsigned int) uiResync{
+    return _priv->cs.getUIResync();
+}
+
+- (unsigned int) uiRemoteGood{
+    return _priv->cs.getUIRemoteGood();
+}
+
+- (unsigned int) uiRemoteLate{
+    return _priv->cs.getUIRemoteLate();
+}
+
+- (unsigned int) uiRemoteLost{
+    return _priv->cs.getUIRemoteLost();
+}
+
+- (unsigned int) uiRemoteResync{
+    return _priv->cs.getUIRemoteResync();
+}
+
+- (void) setUIRemoteGood:(unsigned int)uiRG{
+    _priv->cs.setUIRemoteGood(uiRG);
+}
+
+- (void) setUIRemoteLate:(unsigned int)uiRLat{
+    _priv->cs.setUIRemoteLate(uiRLat);
+}
+
+- (void) setUIRemoteLost:(unsigned int)uiRLos{
+    _priv->cs.setUIRemoteLost(uiRLos);
+}
+
+- (void) setUIRemoteResync:(unsigned int)uiRS{
+    _priv->cs.setUIRemoteResync(uiRS);
+}
+
+- (void) setUIGood:(unsigned int)uiG{
+    _priv->cs.setUIGood(uiG);
+}
+
+- (void) setUILate:(unsigned int)uiLat{
+    _priv->cs.setUILate(uiLat);
+}
+
+- (void) setUILost:(unsigned int)uiLos{
+    _priv->cs.setUILost(uiLos);
+}
+
+- (void) setUIResync:(unsigned int)uiS{
+    _priv->cs.setUIResync(uiS);
 }
 
 @end

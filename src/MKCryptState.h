@@ -16,4 +16,25 @@ struct MKCryptStatePrivate;
 - (NSData *) encryptData:(NSData *)data;
 - (NSData *) decryptData:(NSData *)data;
 
+//API for UDP statistic
+- (unsigned int) uiGood;
+- (unsigned int) uiLate;
+- (unsigned int) uiLost;
+- (unsigned int) uiResync;
+
+- (unsigned int) uiRemoteGood;
+- (unsigned int) uiRemoteLate;
+- (unsigned int) uiRemoteLost;
+- (unsigned int) uiRemoteResync;
+
+- (void) setUIRemoteGood:(unsigned int)uiRG;
+- (void)  setUIRemoteLate:(unsigned int)uiRLat;
+- (void)  setUIRemoteLost:(unsigned int)uiRLos;
+- (void)  setUIRemoteResync:(unsigned int)uiRS;
+
+- (void) setUIGood:(unsigned int)uiG;
+- (void)  setUILate:(unsigned int)uiLat;
+- (void)  setUILost:(unsigned int)uiLos;
+- (void)  setUIResync:(unsigned int)uiS;
+
 @end

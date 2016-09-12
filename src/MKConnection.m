@@ -166,8 +166,21 @@ static void MKConnectionUDPCallback(CFSocketRef sock, CFSocketCallBackType type,
         }
 
         [_crypt release];
+        _crypt = nil;
         _crypt = [[MKCryptState alloc] init];
-
+        
+        ///initial _crypt
+        [_crypt setUIRemoteResync:0];
+        [_crypt setUIRemoteGood:0];
+        [_crypt setUIRemoteLate:0];
+        [_crypt setUIRemoteLost:0];
+        
+        [_crypt setUIResync:0];
+        [_crypt setUIGood:0];
+        [_crypt setUILate:0];
+        [_crypt setUILost:0];
+        ///initial _crypt
+        
         CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault,
                                            (CFStringRef)_hostname, (UInt32) _port,
                                            (CFReadStreamRef *) &_inputStream,
@@ -662,6 +675,7 @@ out:
 - (void) _sendUDPMessage:(NSData *)data {
     // We need a valid CryptState and a valid UDP socket to send UDP datagrams.
     if (![_crypt valid] || !CFSocketIsValid(_udpSock)) {
+        //NSLog(@"%hhd     %hhd", [_crypt valid], CFSocketIsValid(_udpSock));
         NSLog(@"MKConnection: Invalid CryptState or CFSocket.");
         return;
     }
@@ -676,6 +690,10 @@ out:
     if (err != kCFSocketSuccess) {
         NSLog(@"MKConnection: CFSocketSendData failed with err=%i", (int)err);
     }
+    
+//    if ([_crypt valid]) {
+//        NSLog(@"(%ld  %lu) (%lu %lu) (%lu %lu) (%lu %lu)", _crypt.uiGood, _crypt.uiRemoteGood, _crypt.uiLate, _crypt.uiRemoteLate, _crypt.uiLost, _crypt.uiRemoteLost, _crypt.uiResync, _crypt.uiRemoteResync);
+//    }
 }
 
 // Send a control-channel message to the server.  This may be called from any thread,
@@ -867,6 +885,11 @@ out:
     [ping setLate:0];
     [ping setLost:0];
     [ping setResync:0];
+    
+//    [ping setGood:(uint32_t)_crypt.uiGood];
+//    [ping setLate:(uint32_t)_crypt.uiLate];
+//    [ping setLost:(uint32_t)_crypt.uiLost];
+//    [ping setResync:(uint32_t)_crypt.uiResync];
 
     [ping setUdpPingAvg:0.0f];
     [ping setUdpPingVar:0.0f];
@@ -878,11 +901,21 @@ out:
     data = [[ping build] data];
     [self sendMessageWithType:PingMessage data:data];
 
-    NSLog(@"MKConnection: Sent ping message.");
+    //NSLog(@"MKConnection: Sent ping message.");
 }
 
 - (void) _pingResponseFromServer:(MPPing *)pingMessage {
-    NSLog(@"MKConnection: pingResponseFromServer");
+    //NSLog(@"MKConnection: pingResponseFromServer");
+//    if ([_crypt valid]) {
+//        NSLog(@"(%u %u) (%u %u) (%u %u) (%u %u)", _crypt.uiGood, pingMessage.good, _crypt.uiLate, pingMessage.late, _crypt.uiLost, pingMessage.lost, _crypt.uiResync, pingMessage.resync);
+//    }
+    
+    ///set crypt remote value
+    [_crypt setUIRemoteLost:pingMessage.lost];
+    [_crypt setUIRemoteGood:pingMessage.good];
+    [_crypt setUIRemoteLate:pingMessage.late];
+    [_crypt setUIRemoteResync:pingMessage.resync];
+    ///set crypt remote value
 }
 
 // The server rejected our connection.
@@ -912,6 +945,9 @@ out:
     // A full setup message. Initialize our CryptState.
     if ([cryptSetup hasKey] && [cryptSetup hasClientNonce] && [cryptSetup hasServerNonce]) {
         [_crypt setKey:[cryptSetup key] eiv:[cryptSetup clientNonce] div:[cryptSetup serverNonce]];
+        ///update resync
+        [_crypt setUIResync:(_crypt.uiResync + 1)];
+        ///update resync
         NSLog(@"MKConnection: CryptState initialized.");
     }
 }
@@ -1056,9 +1092,20 @@ out:
         }
 
         case UDPPingMessage: {
-            uint64_t timeStamp = [pds getVarint];
-            uint64_t now = [self _currentTimeStamp] - _connTime;
-            NSLog(@"UDP ping = %llu usec", now - timeStamp); 
+//            uint64_t timeStamp = [pds getVarint];
+//            uint64_t now = [self _currentTimeStamp] - _connTime;
+//            NSLog(@"UDP ping = %llu usec", now - timeStamp);
+//            if ([pds valid] && [_crypt valid]) {
+//                //[pds getVarint];
+//                uint32_t good = [pds getUnsignedInt];
+//                uint32_t late = [pds getUnsignedInt];
+//                uint32_t lost= [pds getUnsignedInt];
+//                uint32_t resync = [pds getUnsignedInt];
+//                [_crypt setUIRemoteGood:good];
+//                [_crypt setUIRemoteLate:late];
+//                [_crypt setUIRemoteLost:lost];
+//                [_crypt setUIRemoteResync:resync];
+//            }
             break;
         }
 
@@ -1282,6 +1329,15 @@ out:
 
 - (BOOL) shouldUseOpus {
     return _shouldUseOpus;
+}
+
+- (NSArray *)udpStatistics
+{
+    if (![_crypt valid]) {
+        return nil;
+    }
+    NSArray *array = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:_crypt.uiGood], [NSNumber numberWithUnsignedInt:_crypt.uiLate], [NSNumber numberWithUnsignedInt:_crypt.uiLost], [NSNumber numberWithUnsignedInt:_crypt.uiResync], [NSNumber numberWithUnsignedInt:_crypt.uiRemoteGood], [NSNumber numberWithUnsignedInt:_crypt.uiRemoteLate], [NSNumber numberWithUnsignedInt:_crypt.uiRemoteLost], [NSNumber numberWithUnsignedInt:_crypt.uiRemoteResync], nil];
+    return array;
 }
 
 @end
